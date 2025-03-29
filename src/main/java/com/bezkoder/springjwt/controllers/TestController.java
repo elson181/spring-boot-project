@@ -1,7 +1,6 @@
 package com.bezkoder.springjwt.controllers;
 
-import com.bezkoder.springjwt.models.Books;
-import com.bezkoder.springjwt.models.BorrowRecord;
+import com.bezkoder.springjwt.models.*;
 import com.bezkoder.springjwt.service.TestService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,30 @@ public class TestController {
     return "Public Content.";
   }
 
+  @GetMapping("/circuitBreaker")
+  public String circuitBreaker(){
+    return testService.callPaymentService();
+  }
+
+  @GetMapping("/retryPattern")
+  public String retryPattern(){
+    return testService.checkInventory();
+  }
+
+  @GetMapping("/bulkHeadPattern")
+  public String bulkHeadPattern() throws InterruptedException{
+    return testService.processOrder();
+  }
+
   @GetMapping("/allBooks")
   public List<Books> getAllBooks(){
     return testService.getAllBooks();
+  }
+
+  @GetMapping("/{title}")
+  public ResponseEntity<Books> getBookByTitle(@PathVariable String title) {
+    Books book = testService.getBookByTitle(title);
+    return ResponseEntity.ok(book);
   }
 
   @GetMapping("/getBookById/{id}")

@@ -8,7 +8,9 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.HashSet;
@@ -22,6 +24,8 @@ import java.util.Set;
         })
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class Books {
 
     @Id
@@ -43,28 +47,28 @@ public class Books {
     private Boolean available = true;
 
     // Many-to-Many relationship with Author
-    @ManyToMany
+    @ManyToMany(cascade = { CascadeType.ALL })
     @JoinTable(
             name = "book_author",
             joinColumns = @JoinColumn(name = "book_id"),
             inverseJoinColumns = @JoinColumn(name = "author_id")
     )
     @JsonManagedReference
-    private Set<Author> authors = new HashSet<>();
+    private Set<Author> authors;
 
     // One-to-Many relationship with BorrowRecord
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonBackReference
-    private Set<BorrowRecord> borrowRecords = new HashSet<>();
+    private Set<BorrowRecord> borrowRecords;
 
     // Constructors
-    public Books() {}
-
-    public Books(String title, String isbn, Integer published_year, Boolean available) {
-        this.title = title;
-        this.isbn = isbn;
-        this.published_year = published_year;
-        this.available = available;
-    }
+//    public Books() {}
+//
+//    public Books(String title, String isbn, Integer published_year, Boolean available) {
+//        this.title = title;
+//        this.isbn = isbn;
+//        this.published_year = published_year;
+//        this.available = available;
+//    }
 }
 

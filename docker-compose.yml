@@ -1,0 +1,42 @@
+services:
+  mysql:
+    image: mysql:8
+    container_name: mysql-container
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: my-secret-password
+      MYSQL_DATABASE: demodb
+#        MYSQL_ROOT_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+#        MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "3306:3306"  # Change 3306 -> 3307 (external port)
+    networks:
+      - mynetwork
+    healthcheck: # Ensures MySQL is ready before app starts
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 5
+      start_period: 10s
+
+
+  app:
+    build: .
+    container_name: my-app
+    depends_on:
+#      - mysql
+      mysql:
+        condition: service_healthy # Ensure MySQL is ready before starting the app
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-container:3306/demodb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: my-secret-password
+#      SPRING_DATASOURCE_URL: ${SPRING_DATASOURCE_URL}
+#      SPRING_DATASOURCE_USERNAME: ${SPRING_DATASOURCE_USERNAME}
+#      SPRING_DATASOURCE_PASSWORD: ${SPRING_DATASOURCE_PASSWORD}
+    ports:
+      - "8080:8080"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:

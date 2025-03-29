@@ -22,7 +22,6 @@ public class BorrowRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Getter
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     @JsonManagedReference

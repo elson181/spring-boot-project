@@ -42,7 +42,7 @@ public class User {
 
   @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
   @JsonBackReference
-  private Set<BorrowRecord> borrowRecords = new HashSet<>();
+  private Set<BorrowRecord> borrowRecords;
 
   @ManyToMany(fetch = FetchType.LAZY)
   @JoinTable(name = "user_roles",

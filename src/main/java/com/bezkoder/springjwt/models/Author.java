@@ -26,7 +26,7 @@ public class Author {
     // Bi-directional relationship with Book
     @ManyToMany(mappedBy = "authors")
     @JsonBackReference
-    private Set<Books> books = new HashSet<>();
+    private Set<Books> books;
 
     // Constructors, getters, and setters
     public Author() {}
